@@ -11,7 +11,7 @@ public class CreateOrderRequestHandler : ICreateOrderRequestHandler
 
     public CreateOrderResponse Handle(CreateOrderRequest request)
     {
-        var order = CreateOrderMapper.ToEntity(request);
+        var order = CreateOrderMapper.ToEntity(request, Guid.NewGuid());
         _repository.Add(order);
         return CreateOrderMapper.ToResponse(order);
     }

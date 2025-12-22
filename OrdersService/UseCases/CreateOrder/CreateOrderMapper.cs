@@ -4,9 +4,10 @@ namespace UseCases.CreateOrder;
 
 public static class CreateOrderMapper
 {
-    public static Order ToEntity(CreateOrderRequest request)
+    public static Order ToEntity(CreateOrderRequest request, Guid orderId)
     {
         return new Order(
+            id: orderId,
             userId:  request.UserId,
             amount:  request.Amount,
             description:  request.Description

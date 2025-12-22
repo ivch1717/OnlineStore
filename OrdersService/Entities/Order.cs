@@ -8,9 +8,9 @@ public sealed class Order
     public string Description {get;}
     public OrderStatus Status {get; private set; }
 
-    public Order(Guid userId, int amount, string description)
+    public Order(Guid id, Guid userId, int amount, string description)
     {
-        if (Id == Guid.Empty)
+        if (id == Guid.Empty)
         {
             throw new ArgumentException("Order Id некорректный");
         }
@@ -24,7 +24,7 @@ public sealed class Order
         {
             throw new ArgumentOutOfRangeException(nameof(amount), "Количество должно быть положительным числом");
         }
-        Id = Guid.NewGuid();
+        Id = id;
         UserId = userId;
         Amount = amount;
         Description = description;
