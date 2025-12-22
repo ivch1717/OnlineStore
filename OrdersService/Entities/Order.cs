@@ -1,4 +1,4 @@
-namespace OrdersService.Entities;
+namespace Entities;
 
 public sealed class Order
 {
@@ -6,10 +6,15 @@ public sealed class Order
     public Guid UserId {get;}
     public int Amount {get;}
     public string Description {get;}
-    public OrderStatus Status {get;}
+    public OrderStatus Status {get; private set; }
 
-    public Order(Guid id, Guid userId, int amount, string description, OrderStatus status)
+    public Order(Guid userId, int amount, string description)
     {
+        if (Id == Guid.Empty)
+        {
+            throw new ArgumentException("Order Id некорректный");
+        }
+        
         if (userId == Guid.Empty)
         {
             throw new ArgumentException("User ID некорректный");
@@ -19,10 +24,13 @@ public sealed class Order
         {
             throw new ArgumentOutOfRangeException(nameof(amount), "Количество должно быть положительным числом");
         }
-        Id = id;
+        Id = Guid.NewGuid();
         UserId = userId;
         Amount = amount;
         Description = description;
-        Status = status;
+        Status = OrderStatus.New;
     }
+    
+    public void MarkFinished() => Status = OrderStatus.Finished;
+    public void MarkCanceled() => Status = OrderStatus.Canceled;
 }
