@@ -1,14 +1,14 @@
 namespace Entities;
 
-public sealed class Order
+public class Payment
 {
     public Guid Id {get;}
     public Guid UserId {get;}
+    public Guid OrderId {get;}
     public int Amount {get;}
-    public string Description {get;}
-    public OrderStatus Status {get; private set; }
+    public DateTime Date {get;}
 
-    public Order(Guid id, Guid userId, int amount, string description)
+    public Payment(Guid id, Guid userId, Guid orderId, int amount, DateTime date)
     {
         if (id == Guid.Empty)
         {
@@ -20,17 +20,20 @@ public sealed class Order
             throw new ArgumentException("User ID некорректный");
         }
 
+        if (orderId == Guid.Empty)
+        {
+            throw new ArgumentException("Order ID некорректный");
+        }
+
         if (amount <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(amount), "Цена не может быть отрицательной");
         }
+        
         Id = id;
         UserId = userId;
+        OrderId = orderId;
         Amount = amount;
-        Description = description;
-        Status = OrderStatus.New;
+        Date = date;
     }
-    
-    public void MarkFinished() => Status = OrderStatus.Finished;
-    public void MarkCanceled() => Status = OrderStatus.Canceled;
 }

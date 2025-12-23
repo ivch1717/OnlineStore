@@ -10,6 +10,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "OrdersServi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "OrdersService\Api\Api.csproj", "{E95F29EA-3E6B-47D6-8326-0855C0A7A4B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "PaymentService\Entities\Entities.csproj", "{72CEBE92-A55C-41F3-A0F4-DBB2D260D2D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UseCases", "PaymentService\UseCases\UseCases.csproj", "{6D391C34-4617-42E6-B457-9408E0284E81}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +40,13 @@ Global
 		{E95F29EA-3E6B-47D6-8326-0855C0A7A4B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E95F29EA-3E6B-47D6-8326-0855C0A7A4B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E95F29EA-3E6B-47D6-8326-0855C0A7A4B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72CEBE92-A55C-41F3-A0F4-DBB2D260D2D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72CEBE92-A55C-41F3-A0F4-DBB2D260D2D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72CEBE92-A55C-41F3-A0F4-DBB2D260D2D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72CEBE92-A55C-41F3-A0F4-DBB2D260D2D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D391C34-4617-42E6-B457-9408E0284E81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D391C34-4617-42E6-B457-9408E0284E81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D391C34-4617-42E6-B457-9408E0284E81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D391C34-4617-42E6-B457-9408E0284E81}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
