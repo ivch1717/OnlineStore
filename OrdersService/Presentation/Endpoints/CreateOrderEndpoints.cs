@@ -11,9 +11,19 @@ public static class CreateOrderEndpoints
     {
         group.MapPost("", (CreateOrderRequest request, ICreateOrderRequestHandler handler) =>
             {
-                var response = handler.Handle(request);
-                
-                return Results.Created($"/orders/{response.OrderId}", response);
+                try
+                {
+                    var response = handler.Handle(request);
+                    return Results.Created($"/orders/{response.OrderId}", response);
+                }
+                catch (ArgumentOutOfRangeException ex)
+                {
+                    return Results.BadRequest(new { error = ex.Message, param = ex.ParamName });
+                }
+                catch (ArgumentException ex)
+                {
+                    return Results.BadRequest(new { error = ex.Message });
+                }
             })
             .WithName("CreateOrder")
             .WithSummary("Create order")

@@ -9,14 +9,24 @@ public static class GetOrdersByUserEndpoints
 {
     public static RouteGroupBuilder MapGetOrdersByUser(this RouteGroupBuilder group)
     {
-        group.MapPost("/{userId:guid}/orders", (Guid userId, IGetOrdersByUserRequestHandler handler) =>
+        group.MapGet("/{userId:guid}/orders", (Guid userId, IGetOrdersByUserRequestHandler handler) =>
         {
             if (userId == Guid.Empty)
-            {
                 return Results.BadRequest(new { error = "Некорректный UserId" });
+
+            try
+            {
+                var response = handler.Handle(new GetOrdersByUserRequest(userId));
+                return Results.Ok(response);
             }
-            var response = handler.Handle(new GetOrdersByUserRequest(userId));
-            return Results.Ok(response);
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return Results.BadRequest(new { error = ex.Message, param = ex.ParamName });
+            }
+            catch (ArgumentException ex)
+            {
+                return Results.BadRequest(new { error = ex.Message });
+            }
         })
         .WithName("GetOrdersByUser")
         .WithSummary("Get orders by user id")
