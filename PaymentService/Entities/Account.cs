@@ -4,7 +4,7 @@ public sealed class Account
 {
     public Guid Id {get;}
     public Guid UserId {get;}
-    public int Balance {get;}
+    public int Balance {get; private set;}
     
     public Account(Guid id, Guid userId)
     {
@@ -21,5 +21,10 @@ public sealed class Account
         Id = id;
         UserId = userId;
         Balance = 0;
+    }
+
+    public void EditBalanse(int amount)
+    {
+        Balance += amount;
     }
 }
