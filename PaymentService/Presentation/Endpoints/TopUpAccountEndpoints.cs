@@ -13,7 +13,7 @@ public static class TopUpAccountEndpoints
             {
                 if (accountId == Guid.Empty)
                     return Results.BadRequest(new { error = "Некорректный AccountId" });
-
+                
                 try
                 {
                     var response = handler.Handle(request with { AccountId = accountId });

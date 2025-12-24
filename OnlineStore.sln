@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "PaymentSe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "PaymentService\Presentation\Presentation.csproj", "{613D5F99-E151-427E-9709-4F70B5745449}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "PaymentService\Api\Api.csproj", "{7EF3891A-22E4-4A63-82F2-65BB59B69194}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +62,9 @@ Global
 		{613D5F99-E151-427E-9709-4F70B5745449}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{613D5F99-E151-427E-9709-4F70B5745449}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{613D5F99-E151-427E-9709-4F70B5745449}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EF3891A-22E4-4A63-82F2-65BB59B69194}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EF3891A-22E4-4A63-82F2-65BB59B69194}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EF3891A-22E4-4A63-82F2-65BB59B69194}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EF3891A-22E4-4A63-82F2-65BB59B69194}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

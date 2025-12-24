@@ -12,14 +12,15 @@ internal sealed class TopUpAccountRepository(PaymentServiceDbContext db) : ITopU
             throw new ArgumentOutOfRangeException(nameof(amount), "Amount must be greater than 0.");
 
         var dto = db.Accounts
+            .AsNoTracking()
             .SingleOrDefault(x => x.Id == accountId);
 
         if (dto is null)
             throw new InvalidOperationException($"Account '{accountId}' not found.");
 
-        dto = dto with { Balance = dto.Balance + amount };
+        var updated = dto with { Balance = dto.Balance + amount };
 
-        db.Accounts.Update(dto);
+        db.Accounts.Update(updated);
         db.SaveChanges();
     }
 

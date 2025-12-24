@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Http;
 using Presentation.Endpoints;
 namespace Presentation;
 
-public static class OrdersEndpoints
+public static class PaymentServiceEndpoint
 {
-    public static WebApplication MapOrdersEndpoints(this WebApplication app)
+    public static WebApplication MapAccountsEndpoints(this WebApplication app)
     {
-        app.MapGroup("/orders")
-            .WithTags("Orders")
+        app.MapGroup("/accounts")
+            .WithTags("Accounts")
             .MapCreateAccount()
             .MapTopUpAccount()
             .MapGetBalance();
