@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using UseCases.CreateAccount;
+using Microsoft.EntityFrameworkCore;
 
 namespace Presentation.Endpoints;
 
@@ -13,20 +14,18 @@ public static class CreateAccountEndpoints
             {
                 try
                 {
-                    var response = handler.Handle(request);
-                    return Results.Created($"/accounts/{response.AccountId}", response);
+                    var accountId = handler.Handle(request);
+                    return Results.Created($"/accounts/{accountId}", new { accountId });
                 }
-                catch (ArgumentOutOfRangeException ex)
+                catch (DbUpdateException ex)
+                    when (ex.InnerException is not null &&
+                          ex.InnerException.Message.Contains("IX_Accounts_UserId"))
                 {
-                    return Results.BadRequest(new { error = ex.Message, param = ex.ParamName });
-                }
-                catch (ArgumentException ex)
-                {
-                    return Results.BadRequest(new { error = ex.Message });
-                }
-                catch (InvalidOperationException ex)
-                {
-                    return Results.Conflict(new { error = ex.Message });
+                    return Results.Conflict(new
+                    {
+                        error = "AccountAlreadyExists",
+                        userId = request.UserId
+                    });
                 }
             })
             .WithName("CreateAccount")

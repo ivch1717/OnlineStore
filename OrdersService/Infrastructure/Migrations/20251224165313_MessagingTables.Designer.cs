@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,10 +11,12 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Infrastructure.Migrations
 {
-    [DbContext(typeof(PaymentServiceDbContext))]
-    partial class PaymentServiceDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(OrderServiceDbContext))]
+    [Migration("20251224165313_MessagingTables")]
+    partial class MessagingTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,13 +25,20 @@ namespace Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Infrastructure.Data.Dtos.AccountDto", b =>
+            modelBuilder.Entity("Infrastructure.Data.Dtos.OrderDto", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int>("Balance")
+                    b.Property<int>("Amount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("OrderStatus")
                         .HasColumnType("integer");
 
                     b.Property<Guid>("UserId")
@@ -36,13 +46,12 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
-                    b.ToTable("Accounts", (string)null);
+                    b.ToTable("Orders", (string)null);
                 });
 
-            modelBuilder.Entity("Infrastructure.Data.Dtos.InboxMessageDto", b =>
+            modelBuilder.Entity("Infrastructure.Data.Dtos.OrdersInboxMessageDto", b =>
                 {
                     b.Property<Guid>("MessageId")
                         .ValueGeneratedOnAdd()
@@ -56,9 +65,9 @@ namespace Infrastructure.Migrations
                     b.ToTable("InboxMessages", (string)null);
                 });
 
-            modelBuilder.Entity("Infrastructure.Data.Dtos.PaymentDto", b =>
+            modelBuilder.Entity("Infrastructure.Data.Dtos.PaymentRequestedOutboxDto", b =>
                 {
-                    b.Property<Guid>("PaymentId")
+                    b.Property<Guid>("MessageId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -71,43 +80,17 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uuid");
 
-                    b.Property<short>("Status")
-                        .HasColumnType("smallint");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("PaymentId");
-
-                    b.HasIndex("OrderId")
-                        .IsUnique();
-
-                    b.ToTable("Payments", (string)null);
-                });
-
-            modelBuilder.Entity("Infrastructure.Data.Dtos.PaymentResultOutboxDto", b =>
-                {
-                    b.Property<Guid>("MessageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime?>("PublishedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<short>("Status")
-                        .HasColumnType("smallint");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("MessageId");
 
                     b.HasIndex("PublishedAt");
 
-                    b.ToTable("OutboxPaymentResults", (string)null);
+                    b.ToTable("OutboxPaymentRequested", (string)null);
                 });
 #pragma warning restore 612, 618
         }

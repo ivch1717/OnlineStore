@@ -11,7 +11,7 @@ public class TopUpAccountRequestHandler : ITopUpAccountRequestHandler
 
     public TopUpAccountResponse Handle(TopUpAccountRequest request)
     {
-        if (request.AccountId == Guid.Empty)
+        if (request.UserId == Guid.Empty)
         {
             throw new ArgumentException("Некорректный id счёта");
         }
@@ -20,7 +20,7 @@ public class TopUpAccountRequestHandler : ITopUpAccountRequestHandler
         {
             throw new ArgumentException("Некорректный пополнить счёт на не положительное число");
         }
-        _repository.TopUpAccount(request.AccountId, request.Amount);
-        return TopUpAccountMapper.ToResponse(_repository.GetAccount(request.AccountId));
+        _repository.TopUpAccount(request.UserId, request.Amount);
+        return TopUpAccountMapper.ToResponse(_repository.GetAccount(request.UserId));
     }
 }

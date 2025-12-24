@@ -1,6 +1,6 @@
 namespace UseCases.TopUpAccount;
 
 public sealed record TopUpAccountRequest(
-    Guid AccountId,
+    Guid UserId,
     int Amount
     );

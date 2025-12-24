@@ -47,6 +47,48 @@ namespace Infrastructure.Migrations
 
                     b.ToTable("Orders", (string)null);
                 });
+
+            modelBuilder.Entity("Infrastructure.Data.Dtos.OrdersInboxMessageDto", b =>
+                {
+                    b.Property<Guid>("MessageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("ProcessedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("MessageId");
+
+                    b.ToTable("InboxMessages", (string)null);
+                });
+
+            modelBuilder.Entity("Infrastructure.Data.Dtos.PaymentRequestedOutboxDto", b =>
+                {
+                    b.Property<Guid>("MessageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("PublishedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("MessageId");
+
+                    b.HasIndex("PublishedAt");
+
+                    b.ToTable("OutboxPaymentRequested", (string)null);
+                });
 #pragma warning restore 612, 618
         }
     }

@@ -4,6 +4,6 @@ namespace UseCases.TopUpAccount;
 
 public interface ITopUpAccountRepository
 {
-    void TopUpAccount(Guid accountId, int amount);
-    Account GetAccount(Guid accountId);
+    void TopUpAccount(Guid userId, int amount);
+    Account GetAccount(Guid userId);
 }

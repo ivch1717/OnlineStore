@@ -9,14 +9,14 @@ public static class GetBalanceEndpoints
 {
     public static RouteGroupBuilder MapGetBalance(this RouteGroupBuilder group)
     {
-        group.MapGet("/{accountId:guid}/balance", (Guid accountId, IGetBalanceRequestHandler handler) =>
+        group.MapGet("/{userId:guid}/balance", (Guid userId, IGetBalanceRequestHandler handler) =>
             {
-                if (accountId == Guid.Empty)
-                    return Results.BadRequest(new { error = "Некорректный AccountId" });
+                if (userId == Guid.Empty)
+                    return Results.BadRequest(new { error = "Некорректный UserId" });
 
                 try
                 {
-                    var response = handler.Handle(new GetBalanceRequest(accountId));
+                    var response = handler.Handle(new GetBalanceRequest(userId));
                     return Results.Ok(response);
                 }
                 catch (ArgumentOutOfRangeException ex)

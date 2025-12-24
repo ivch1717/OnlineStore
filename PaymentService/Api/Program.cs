@@ -3,11 +3,17 @@ using Presentation;
 using UseCases.CreateAccount;
 using UseCases.GetBalance;
 using UseCases.TopUpAccount;
+using Infrastructure.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddRabbitMq(builder.Configuration);
+
+builder.Services.AddHostedService<PaymentsPaymentRequestedConsumerHostedService>();
+builder.Services.AddHostedService<PaymentsOutboxPublisherHostedService>();
 
 builder.Services.AddPaymentsInfrastructure(builder.Configuration);
 

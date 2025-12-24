@@ -6,17 +6,17 @@ namespace Infrastructure.Data.Repositories;
 
 internal sealed class TopUpAccountRepository(PaymentServiceDbContext db) : ITopUpAccountRepository
 {
-    public void TopUpAccount(Guid accountId, int amount)
+    public void TopUpAccount(Guid userId, int amount)
     {
         if (amount <= 0)
             throw new ArgumentOutOfRangeException(nameof(amount), "Amount must be greater than 0.");
 
         var dto = db.Accounts
             .AsNoTracking()
-            .SingleOrDefault(x => x.Id == accountId);
+            .SingleOrDefault(x => x.UserId == userId);
 
         if (dto is null)
-            throw new InvalidOperationException($"Account '{accountId}' not found.");
+            throw new InvalidOperationException($"User '{userId}' not found.");
 
         var updated = dto with { Balance = dto.Balance + amount };
 
@@ -24,14 +24,14 @@ internal sealed class TopUpAccountRepository(PaymentServiceDbContext db) : ITopU
         db.SaveChanges();
     }
 
-    public Entities.Account GetAccount(Guid accountId)
+    public Entities.Account GetAccount(Guid userId)
     {
         var dto = db.Accounts
             .AsNoTracking()
-            .SingleOrDefault(x => x.Id == accountId);
+            .SingleOrDefault(x => x.UserId == userId);
 
         if (dto is null)
-            throw new InvalidOperationException($"Account '{accountId}' not found.");
+            throw new InvalidOperationException($"User '{userId}' not found.");
 
         return Infrastructure.Data.Mapper.DataMapper.ToEntity(dto);
     }

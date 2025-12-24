@@ -2,9 +2,13 @@ using Infrastructure.Data.Dtos;
 using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Data.Db;
 
-internal sealed class PaymentServiceDbContext(DbContextOptions<PaymentServiceDbContext> options) : DbContext(options)
+public sealed class PaymentServiceDbContext(DbContextOptions<PaymentServiceDbContext> options) : DbContext(options)
 {
     public DbSet<AccountDto> Accounts => Set<AccountDto>();
+    public DbSet<InboxMessageDto> InboxMessages => Set<InboxMessageDto>();
+    public DbSet<PaymentDto> Payments => Set<PaymentDto>();
+    public DbSet<PaymentResultOutboxDto> OutboxPaymentResults => Set<PaymentResultOutboxDto>();
+    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -17,5 +21,7 @@ internal sealed class PaymentServiceDbContext(DbContextOptions<PaymentServiceDbC
             
             builder.Property(x => x.Balance).IsRequired();
         });
+        
+        modelBuilder.ConfigurePaymentsMessaging();
     }
 }

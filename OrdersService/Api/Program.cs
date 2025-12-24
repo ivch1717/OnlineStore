@@ -3,8 +3,15 @@ using Presentation;
 using UseCases.CreateOrder;
 using UseCases.GetOrderById;
 using UseCases.GetOrdersByUser;
+using Infrastructure.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddRabbitMq(builder.Configuration);
+
+builder.Services.AddHostedService<OrdersOutboxPublisherHostedService>();
+builder.Services.AddHostedService<OrdersPaymentResultConsumerHostedService>();
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

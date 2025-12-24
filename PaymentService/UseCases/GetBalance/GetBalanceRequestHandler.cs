@@ -11,10 +11,10 @@ public class GetBalanceRequestHandler : IGetBalanceRequestHandler
 
     GetBalanceResponse IGetBalanceRequestHandler.Handle(GetBalanceRequest request)
     {
-        if (request.AccountId == Guid.Empty)
+        if (request.UserId == Guid.Empty)
         {
             throw new ArgumentException("Некорректный id счёта");
         }
-        return GetBalanceMapper.ToResponse(_repository.GetBalance(request.AccountId));
+        return GetBalanceMapper.ToResponse(_repository.GetBalance(request.UserId));
     }
 }

@@ -2,9 +2,12 @@ using Infrastructure.Data.Dtos;
 using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Data.Db;
 
-internal sealed class OrderServiceDbContext(DbContextOptions<OrderServiceDbContext> options) : DbContext(options)
+public sealed class OrderServiceDbContext(DbContextOptions<OrderServiceDbContext> options) : DbContext(options)
 {
     public DbSet<OrderDto> Orders => Set<OrderDto>();
+    public DbSet<PaymentRequestedOutboxDto> OutboxPaymentRequested => Set<PaymentRequestedOutboxDto>();
+    public DbSet<OrdersInboxMessageDto> InboxMessages => Set<OrdersInboxMessageDto>();
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -20,6 +23,8 @@ internal sealed class OrderServiceDbContext(DbContextOptions<OrderServiceDbConte
             builder.Property(x => x.OrderStatus).IsRequired();
 
             builder.HasIndex(x => x.UserId);
+            
+            modelBuilder.ConfigureOrdersMessaging();
         });
     }
 }

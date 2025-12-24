@@ -9,14 +9,14 @@ public static class TopUpAccountEndpoints
 {
     public static RouteGroupBuilder MapTopUpAccount(this RouteGroupBuilder group)
     {
-        group.MapPost("/{accountId:guid}/top-up", (Guid accountId, TopUpAccountRequest request, ITopUpAccountRequestHandler handler) =>
+        group.MapPost("/{userId:guid}/top-up", (Guid userId, TopUpAccountRequest request, ITopUpAccountRequestHandler handler) =>
             {
-                if (accountId == Guid.Empty)
-                    return Results.BadRequest(new { error = "Некорректный AccountId" });
+                if (userId == Guid.Empty)
+                    return Results.BadRequest(new { error = "Некорректный UseId" });
                 
                 try
                 {
-                    var response = handler.Handle(request with { AccountId = accountId });
+                    var response = handler.Handle(request with { UserId = userId});
 
                     return Results.Ok(response);
                 }
@@ -35,7 +35,7 @@ public static class TopUpAccountEndpoints
             })
             .WithName("TopUpAccount")
             .WithSummary("Top up account")
-            .WithDescription("Пополнение баланса счета (синхронно)")
+            .WithDescription("Пополнение баланса счета")
             .WithOpenApi()
             .Produces<TopUpAccountResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)

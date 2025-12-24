@@ -4,5 +4,5 @@ namespace UseCases.GetBalance;
 
 public interface IGetBalanceRepository
 {
-    Account GetBalance(Guid accountId);
+    Account GetBalance(Guid userId);
 }   
