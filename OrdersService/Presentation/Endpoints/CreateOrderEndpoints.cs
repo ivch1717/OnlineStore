@@ -11,6 +11,7 @@ public static class CreateOrderEndpoints
     {
         group.MapPost("", (CreateOrderRequest request, ICreateOrderRequestHandler handler) =>
             {
+                Console.WriteLine($"[CreateOrder] userId={request.UserId}, amount={request.Amount}, description='{request.Description}'");
                 try
                 {
                     var response = handler.Handle(request);

@@ -83,6 +83,11 @@ services:
       payments-postgres:
         condition: service_healthy
     restart: unless-stopped
+    
+  frontend:
+    build:
+      context: ./Frontend
+    restart: unless-stopped
 
   scalar:
     image: scalarapi/api-reference:latest
