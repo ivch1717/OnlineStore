@@ -1,0 +1,112 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15673:15672"
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+    restart: unless-stopped
+
+  orders-postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: orders
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - orders_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d orders"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+
+  payments-postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: accounts
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - payments_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d accounts"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+
+  orders-api:
+    build:
+      context: .
+      dockerfile: OrdersService/Api/Dockerfile
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:8080
+      ConnectionStrings__Default: Host=orders-postgres;Port=5432;Database=orders;Username=postgres;Password=postgres
+      RabbitMq__HostName: rabbitmq
+      RabbitMq__Port: 5672
+      RabbitMq__UserName: guest
+      RabbitMq__Password: guest
+      RabbitMq__PaymentRequestedQueue: payment-requested
+      RabbitMq__PaymentResultQueue: payment-result
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      orders-postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  payments-api:
+    build:
+      context: .
+      dockerfile: PaymentService/Api/Dockerfile
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:8080
+      ConnectionStrings__Default: Host=payments-postgres;Port=5432;Database=accounts;Username=postgres;Password=postgres
+      RabbitMq__HostName: rabbitmq
+      RabbitMq__Port: 5672
+      RabbitMq__UserName: guest
+      RabbitMq__Password: guest
+      RabbitMq__PaymentRequestedQueue: payment-requested
+      RabbitMq__PaymentResultQueue: payment-result
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      payments-postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  scalar:
+    image: scalarapi/api-reference:latest
+    environment:
+      API_REFERENCE_CONFIG: >
+        {"theme":"purple","sources":[{"url":"/orders/openapi.json","title":"Orders API"},{"url":"/accounts/openapi.json","title":"Payments API"}],
+        "servers":[{"url":"http://localhost:7000","description":"Dev"}]}
+    depends_on:
+      - orders-api
+      - payments-api
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "7000:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - orders-api
+      - payments-api
+      - scalar
+    restart: unless-stopped
+
+volumes:
+  orders_db_data:
+  payments_db_data:

@@ -1,23 +1,22 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
-USER $APP_UID
-WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-ARG BUILD_CONFIGURATION=Release
+﻿FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
-COPY ["PaymentService/Api/Api.csproj", "PaymentService/Api/"]
-RUN dotnet restore "PaymentService/Api/Api.csproj"
+
+COPY PaymentService/Api/Api.csproj PaymentService/Api/
+COPY PaymentService/Entities/Entities.csproj PaymentService/Entities/
+COPY PaymentService/Infrastructure/Infrastructure.csproj PaymentService/Infrastructure/
+COPY PaymentService/Presentation/Presentation.csproj PaymentService/Presentation/
+COPY PaymentService/UseCases/UseCases.csproj PaymentService/UseCases/
+
+RUN dotnet restore PaymentService/Api/Api.csproj
+
 COPY . .
-WORKDIR "/src/PaymentService/Api"
-RUN dotnet build "./Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet publish PaymentService/Api/Api.csproj -c Release -o /app/publish /p:UseAppHost=false
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
-COPY --from=publish /app/publish .
+
+ENV ASPNETCORE_URLS=http://0.0.0.0:8080
+EXPOSE 8080
+
+COPY --from=build /app/publish ./
 ENTRYPOINT ["dotnet", "Api.dll"]

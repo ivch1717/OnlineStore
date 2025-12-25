@@ -1,0 +1,10 @@
+{
+  "theme": "purple",
+  "sources": [
+    { "url": "/orders/openapi.json", "title": "Orders API" },
+    { "url": "/accounts/openapi.json", "title": "Payments API" }
+  ],
+  "servers": [
+    { "url": "http://localhost:7000", "description": "Dev" }
+  ]
+}
